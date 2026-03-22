@@ -99,18 +99,20 @@ const ActivityLog = () => {
       </div>
 
       {/* Quick Activities */}
-      <div className="p-4 lg:p-6 lg:max-w-4xl">
-        <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">Quick Add</h3>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+      <div className="p-4 lg:p-6 lg:max-w-4xl mx-auto w-full">
+        <h3 className="text-[10px] md:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-4">Pulse Points / Quick Add</h3>
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-3">
           {quickActivities.map((activity) => (
             <button
               key={activity.name}
               onClick={() => handleQuickAdd(activity)}
-              className="flex flex-col items-center gap-2 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all duration-200 cursor-pointer"
+              className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-white dark:bg-[#1a1c1b] border border-slate-100 dark:border-white/5 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 group cursor-pointer"
             >
-              <span className="text-2xl">{activity.emoji}</span>
-              <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{activity.name}</span>
-              <span className="text-[10px] text-slate-400">{activity.rate} cal/min</span>
+              <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-full text-xl md:text-2xl group-hover:scale-110 transition-transform duration-300">
+                {activity.emoji}
+              </div>
+              <span className="text-[10px] md:text-xs font-bold text-slate-700 dark:text-slate-200 text-center leading-tight">{activity.name}</span>
+              <span className="text-[9px] text-slate-400 text-center font-medium">{activity.rate} <span className="text-[8px] opacity-70">cal/m</span></span>
             </button>
           ))}
         </div>
@@ -118,16 +120,25 @@ const ActivityLog = () => {
 
       {/* Add Activity Form */}
       {showForm && (
-        <div className="px-4 lg:px-6 lg:max-w-2xl">
-          <Card>
-            <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-4">Log Activity</h3>
-            <div className="space-y-4">
-              <Input label="Activity Name" value={formData.name} onChange={(v) => setFormData({ ...formData, name: String(v) })} placeholder="e.g. Morning Run" required />
-              <Input label="Duration (minutes)" type="number" value={formData.duration} onChange={(v) => handleDurationChange(Number(v))} placeholder="e.g. 30" min={1} required />
-              <Input label="Calories Burned" type="number" value={formData.calories} onChange={(v) => setFormData({ ...formData, calories: Number(v) })} placeholder="e.g. 300" min={1} required />
-              <div className="flex gap-3 pt-2">
-                <Button onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? "Adding..." : "Add Activity"}</Button>
-                <Button variant="secondary" onClick={() => setShowForm(false)}>Cancel</Button>
+        <div className="px-4 lg:px-6 lg:max-w-4xl mx-auto w-full mb-8">
+          <Card className="overflow-hidden border-t-2 border-emerald-500">
+            <div className="p-4 sm:p-6">
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
+                <div className="w-1 h-6 bg-emerald-500 rounded-full" />
+                LOG MANIFEST
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="sm:col-span-2 md:col-span-1">
+                  <Input label="Activity Name" value={formData.name} onChange={(v) => setFormData({ ...formData, name: String(v) })} placeholder="e.g. Morning Run" required className="dark:bg-white/5" />
+                </div>
+                <div className="grid grid-cols-2 gap-4 sm:col-span-2 md:col-span-2">
+                  <Input label="Duration (min)" type="number" value={formData.duration} onChange={(v) => handleDurationChange(Number(v))} placeholder="e.g. 30" min={1} required className="dark:bg-white/5" />
+                  <Input label="Burned (kcal)" type="number" value={formData.calories} onChange={(v) => setFormData({ ...formData, calories: Number(v) })} placeholder="e.g. 300" min={1} required className="dark:bg-white/5" />
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3 mt-8">
+                <Button onClick={handleSubmit} disabled={isSubmitting} className="w-full sm:w-48 bg-emerald-500 text-black font-black uppercase text-xs tracking-widest">{isSubmitting ? "SYNCING..." : "COMMIT LOG"}</Button>
+                <Button variant="secondary" onClick={() => setShowForm(false)} className="w-full sm:w-auto text-xs font-bold uppercase tracking-widest">DISCARD</Button>
               </div>
             </div>
           </Card>
@@ -135,17 +146,17 @@ const ActivityLog = () => {
       )}
 
       {/* Activity Log List */}
-      <div className="p-4 lg:p-6 space-y-3 lg:max-w-4xl">
+      <div className="p-4 lg:p-6 space-y-4 lg:max-w-4xl mx-auto w-full">
         {todayLogs.length === 0 ? (
-          <Card className="text-center py-12">
-            <ActivityIcon className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-            <p className="text-slate-500 dark:text-slate-400 font-medium">No activities logged today</p>
-            <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">Use quick add or tap "Add Activity" to start</p>
-          </Card>
+          <div className="text-center py-20 bg-slate-50 dark:bg-white/5 rounded-3xl border-2 border-dashed border-slate-200 dark:border-white/10">
+            <ActivityIcon className="w-12 h-12 text-slate-300 dark:text-white/20 mx-auto mb-4 animate-pulse" />
+            <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-sm">Static Input Detected</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">Zero activity units recorded for current cycle.</p>
+          </div>
         ) : (
           todayLogs.map((log) => (
-            <Card key={log.id}>
-              <div className="activity-entry-item p-0! bg-transparent!">
+            <Card key={log.id} className="group hover:border-emerald-500/30 transition-all duration-300">
+              <div className="activity-entry-item p-1! bg-transparent!">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center">
                     <ActivityIcon className="w-5 h-5 text-orange-500" />

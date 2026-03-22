@@ -918,7 +918,7 @@ const SignUpPage = ({ setView }: any) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { signup } = useAppContext();
+  const { signup, loginWithProvider } = useAppContext();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -941,7 +941,11 @@ const SignUpPage = ({ setView }: any) => {
       subtitle="Join 50,000+ athletes reaching their peak."
       setView={setView}
     >
-      <Button variant="outline" className="w-full h-12 gap-3 mb-6 font-bold text-gray-700">
+      <Button 
+        variant="outline" 
+        className="w-full h-12 gap-3 mb-6 font-bold text-gray-700"
+        onClick={() => loginWithProvider('google')}
+      >
         <Icons.Google className="w-5 h-5" /> Sign up with Google
       </Button>
 

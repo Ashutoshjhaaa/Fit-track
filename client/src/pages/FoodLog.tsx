@@ -137,18 +137,18 @@ const FoodLog = () => {
             <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Food Log</h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Track your daily nutrition</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => { setShowImageForm(!showImageForm); setShowSnapForm(false); setShowForm(false) }} className="px-4! py-2.5!">
+          <div className="flex flex-wrap gap-2 mt-4 sm:mt-0">
+            <Button variant="secondary" onClick={() => { setShowImageForm(!showImageForm); setShowSnapForm(false); setShowForm(false) }} className="flex-1 sm:flex-none px-3! py-2!">
               <CameraIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">Photo Snap</span>
+              <span className="inline">Photo</span>
             </Button>
-            <Button variant="secondary" onClick={() => { setShowSnapForm(!showSnapForm); setShowImageForm(false); setShowForm(false) }} className="px-4! py-2.5!">
+            <Button variant="secondary" onClick={() => { setShowSnapForm(!showSnapForm); setShowImageForm(false); setShowForm(false) }} className="flex-1 sm:flex-none px-3! py-2!">
               <SparklesIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">AI Food Snap</span>
+              <span className="inline">AI Snap</span>
             </Button>
-            <Button onClick={() => { setShowForm(!showForm); setShowSnapForm(false); setShowImageForm(false) }} className="px-4! py-2.5!">
+            <Button onClick={() => { setShowForm(!showForm); setShowSnapForm(false); setShowImageForm(false) }} className="flex-1 sm:flex-none px-3! py-2!">
               <PlusIcon className="w-5 h-5" />
-              <span className="hidden sm:inline">Add Food</span>
+              <span className="inline">Food</span>
             </Button>
           </div>
         </div>
@@ -168,71 +168,80 @@ const FoodLog = () => {
 
       {/* Photo Food Analysis */}
       {showImageForm && (
-        <div className="p-4 lg:p-6 lg:max-w-2xl">
-          <Card>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <CameraIcon className="w-5 h-5 text-emerald-500" />
-                <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Photo Food Analysis</h3>
+        <div className="p-4 lg:p-6 lg:max-w-4xl mx-auto w-full">
+          <Card className="overflow-hidden border-t-2 border-emerald-500">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                    <CameraIcon className="w-6 h-6 border-none" />
+                  </div>
+                  <h3 className="text-lg font-black text-slate-800 dark:text-white tracking-widest uppercase">PHOTO ANALYSIS</h3>
+                </div>
+                <button onClick={() => { setShowImageForm(false); setImagePreview(null); setImageBase64("") }} className="text-slate-400 hover:text-slate-600 p-2">
+                  <XIcon className="w-5 h-5" />
+                </button>
               </div>
-              <button onClick={() => { setShowImageForm(false); setImagePreview(null); setImageBase64("") }} className="text-slate-400 hover:text-slate-600">
-                <XIcon className="w-4 h-4" />
-              </button>
+              <p className="text-xs font-bold text-slate-400 mb-6 uppercase tracking-wider">Visual Intake Digitization</p>
+              <input ref={fileInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleImageSelect} />
+              {!imagePreview ? (
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full border-2 border-dashed border-slate-200 dark:border-white/10 rounded-2xl p-12 flex flex-col items-center gap-4 hover:border-emerald-500/50 hover:bg-emerald-500/[0.02] transition-all duration-300 cursor-pointer group"
+                >
+                  <CameraIcon className="w-12 h-12 text-slate-300 dark:text-white/20 group-hover:scale-110 transition-transform duration-300" />
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">ENGAGE OPTIC SENSOR</p>
+                </button>
+              ) : (
+                <div className="space-y-6">
+                  <div className="relative rounded-2xl overflow-hidden border-2 border-slate-100 dark:border-white/5 shadow-2xl">
+                    <img src={imagePreview} alt="Food preview" className="w-full max-h-80 object-cover" />
+                    <button
+                      onClick={() => { setImagePreview(null); setImageBase64(""); if (fileInputRef.current) fileInputRef.current.value = "" }}
+                      className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white rounded-full p-2 hover:bg-red-500 transition-colors"
+                    >
+                      <XIcon className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button onClick={handleImageAnalysis} disabled={isAnalyzing} className="w-full sm:w-48 bg-emerald-500 text-black font-black uppercase text-xs tracking-widest h-12">
+                      {isAnalyzing ? "PROCESSING..." : "PROCESS OPTICS"}
+                    </Button>
+                    <Button variant="secondary" onClick={() => fileInputRef.current?.click()} className="w-full sm:w-auto text-xs font-bold uppercase tracking-widest h-12">RE-CAPTURE</Button>
+                  </div>
+                </div>
+              )}
             </div>
-            <p className="text-sm text-slate-400 mb-4">Take or upload a photo of your food — AI will identify it and estimate calories.</p>
-            <input ref={fileInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleImageSelect} />
-            {!imagePreview ? (
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-10 flex flex-col items-center gap-3 hover:border-emerald-400 transition-colors cursor-pointer"
-              >
-                <CameraIcon className="w-10 h-10 text-slate-300 dark:text-slate-600" />
-                <p className="text-sm text-slate-400">Tap to take a photo or choose from gallery</p>
-              </button>
-            ) : (
-              <div className="space-y-4">
-                <div className="relative rounded-xl overflow-hidden">
-                  <img src={imagePreview} alt="Food preview" className="w-full max-h-60 object-cover" />
-                  <button
-                    onClick={() => { setImagePreview(null); setImageBase64(""); if (fileInputRef.current) fileInputRef.current.value = "" }}
-                    className="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1 hover:bg-black/75"
-                  >
-                    <XIcon className="w-4 h-4" />
-                  </button>
-                </div>
-                <div className="flex gap-3">
-                  <Button onClick={handleImageAnalysis} disabled={isAnalyzing}>
-                    {isAnalyzing ? "Analyzing..." : "Analyze Photo"}
-                  </Button>
-                  <Button variant="secondary" onClick={() => fileInputRef.current?.click()}>Change Photo</Button>
-                </div>
-              </div>
-            )}
           </Card>
         </div>
       )}
 
       {/* AI Food Snap Form */}
       {showSnapForm && (
-        <div className="p-4 lg:p-6 lg:max-w-2xl">
-          <Card>
-            <div className="flex items-center gap-2 mb-4">
-              <SparklesIcon className="w-5 h-5 text-emerald-500" />
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-white">AI Food Snap</h3>
-            </div>
-            <p className="text-sm text-slate-400 mb-4">Describe your food and AI will estimate the calories automatically.</p>
-            <div className="space-y-4">
-              <Input
-                label="Describe your food"
-                value={snapInput}
-                onChange={(v) => setSnapInput(String(v))}
-                placeholder="e.g. a bowl of oatmeal with banana and honey"
-              />
-              <div className="flex gap-3 pt-2">
-                <Button onClick={handleFoodSnap} disabled={isAnalyzing}>
-                  {isAnalyzing ? "Analyzing..." : "Analyze Food"}
-                </Button>
-                <Button variant="secondary" onClick={() => { setShowSnapForm(false); setSnapInput("") }}>Cancel</Button>
+        <div className="p-4 lg:p-6 lg:max-w-4xl mx-auto w-full">
+          <Card className="border-t-2 border-emerald-500">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500">
+                  <SparklesIcon className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-black text-slate-800 dark:text-white tracking-widest uppercase">AI FOOD SNAP</h3>
+              </div>
+              <p className="text-xs font-bold text-slate-400 mb-6 uppercase tracking-wider">Semantic Consumption Input</p>
+              <div className="space-y-6">
+                <Input
+                  label="Consumption Description"
+                  value={snapInput}
+                  onChange={(v) => setSnapInput(String(v))}
+                  placeholder="e.g. 2 slices of pepperoni pizza, 1 glass of coke"
+                  className="bg-slate-50 dark:bg-white/5 h-14"
+                />
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button onClick={handleFoodSnap} disabled={isAnalyzing} className="w-full sm:w-48 bg-emerald-500 text-black font-black uppercase text-xs tracking-widest h-12">
+                    {isAnalyzing ? "ANALYZING..." : "ANALYZE LOG"}
+                  </Button>
+                  <Button variant="secondary" onClick={() => { setShowSnapForm(false); setSnapInput("") }} className="w-full sm:w-auto text-xs font-bold uppercase tracking-widest h-12">ABORT</Button>
+                </div>
               </div>
             </div>
           </Card>
@@ -241,16 +250,20 @@ const FoodLog = () => {
 
       {/* Add Food Form */}
       {showForm && (
-        <div className="p-4 lg:p-6 lg:max-w-2xl">
-          <Card>
-            <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-4">Add Food Entry</h3>
-            <div className="space-y-4">
-              <Input label="Food Name" value={formData.name} onChange={(v) => setFormData({ ...formData, name: String(v) })} placeholder="e.g. Grilled Chicken Salad" required />
-              <Input label="Calories" type="number" value={formData.calories} onChange={(v) => setFormData({ ...formData, calories: Number(v) })} placeholder="e.g. 350" min={1} required />
-              <Select label="Meal Type" value={formData.mealType} onChange={(v) => setFormData({ ...formData, mealType: String(v) })} options={mealTypeOptions} required placeholder="Select meal type" />
-              <div className="flex gap-3 pt-2">
-                <Button onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? "Adding..." : "Add Entry"}</Button>
-                <Button variant="secondary" onClick={() => setShowForm(false)}>Cancel</Button>
+        <div className="p-4 lg:p-6 lg:max-w-4xl mx-auto w-full">
+          <Card className="border-t-2 border-emerald-500">
+            <div className="p-4 sm:p-6">
+              <h3 className="text-lg font-black text-slate-800 dark:text-white mb-8 tracking-widest uppercase">MANUAL ENTRY</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Input label="Identity" value={formData.name} onChange={(v) => setFormData({ ...formData, name: String(v) })} placeholder="e.g. Greek Yogurt Bowl" required className="bg-slate-50 dark:bg-white/5" />
+                <Input label="Energy (kcal)" type="number" value={formData.calories} onChange={(v) => setFormData({ ...formData, calories: Number(v) })} placeholder="e.g. 250" min={1} required className="bg-slate-50 dark:bg-white/5" />
+                <Select label="Classification" value={formData.mealType} onChange={(v) => setFormData({ ...formData, mealType: String(v) })} options={mealTypeOptions} required placeholder="Select Type" className="bg-slate-50 dark:bg-white/5" />
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3 mt-8">
+                <Button onClick={handleSubmit} disabled={isSubmitting} className="w-full sm:w-48 bg-emerald-500 text-black font-black uppercase text-xs tracking-widest h-12">
+                  {isSubmitting ? "UPLOADING..." : "COMMIT ENTRY"}
+                </Button>
+                <Button variant="secondary" onClick={() => setShowForm(false)} className="w-full sm:w-auto text-xs font-bold uppercase tracking-widest h-12">DISCARD</Button>
               </div>
             </div>
           </Card>
@@ -258,49 +271,57 @@ const FoodLog = () => {
       )}
 
       {/* Food Log List */}
-      <div className="p-4 lg:p-6 space-y-4 lg:max-w-4xl">
+      <div className="p-4 lg:p-6 lg:max-w-4xl mx-auto w-full space-y-6">
         {todayLogs.length === 0 ? (
-          <Card className="text-center py-12">
-            <UtensilsIcon className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-            <p className="text-slate-500 dark:text-slate-400 font-medium">No food logged today</p>
-            <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">Tap "Add Food" to start tracking your meals</p>
-          </Card>
+          <div className="text-center py-20 bg-slate-50 dark:bg-white/5 rounded-3xl border-2 border-dashed border-slate-200 dark:border-white/10">
+            <UtensilsIcon className="w-12 h-12 text-slate-300 dark:text-white/20 mx-auto mb-4 animate-pulse" />
+            <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-sm">Nutritional Void</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">Zero caloric units recorded for current cycle.</p>
+          </div>
         ) : (
           Object.entries(grouped).map(([mealType, logs]) => {
             const MealIcon = mealIcons[mealType as keyof typeof mealIcons] || UtensilsIcon
-            const colorClass = mealColors[mealType as keyof typeof mealColors] || "bg-slate-100 text-slate-600"
+            const colorClass = mealColors[mealType as keyof typeof mealColors] || "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400"
             const mealTotal = logs.reduce((sum, l) => sum + l.calories, 0)
 
             return (
-              <Card key={mealType}>
-                <div className="flex items-center justify-between mb-4">
+              <div key={mealType} className="space-y-4">
+                <div className="flex items-center justify-between pl-1">
                   <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${colorClass}`}>
-                      <MealIcon className="w-4 h-4" />
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colorClass} border border-slate-200 dark:border-white/5 shadow-sm`}>
+                      <MealIcon className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-800 dark:text-white capitalize">{mealType}</h3>
-                      <p className="text-xs text-slate-400">{logs.length} item{logs.length > 1 ? "s" : ""}</p>
+                      <h3 className="text-xs font-black text-slate-500 dark:text-emerald-500 uppercase tracking-[0.3em]">{mealType}</h3>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{logs.length} UNIT{logs.length > 1 ? "S" : ""}</p>
                     </div>
                   </div>
-                  <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{mealTotal} kcal</span>
+                  <div className="text-right">
+                    <p className="text-sm font-black text-slate-700 dark:text-white tracking-widest uppercase">{mealTotal} <span className="text-[10px] text-slate-400 font-normal">KCAL</span></p>
+                  </div>
                 </div>
-                <div className="space-y-2">
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {logs.map((log) => (
-                    <div key={log.id} className="food-entry-item">
-                      <div>
-                        <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{log.name}</p>
-                        <p className="text-xs text-slate-400">{log.calories} kcal</p>
+                    <Card key={log.id} className="group hover:border-emerald-500/30 transition-all duration-300">
+                      <div className="flex items-center justify-between p-1">
+                        <div>
+                          <p className="text-sm font-bold text-slate-700 dark:text-white leading-tight">{log.name}</p>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{log.calories} KCAL</p>
+                        </div>
+                        {log.documentId && (
+                          <button 
+                            onClick={() => handleDelete(log.documentId!)} 
+                            className="p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-500/10 text-slate-300 hover:text-red-500 transition-all duration-200"
+                          >
+                            <Trash2Icon className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
-                      {log.documentId && (
-                        <button onClick={() => handleDelete(log.documentId!)} className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-400 hover:text-red-500 transition-colors cursor-pointer">
-                          <Trash2Icon className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
+                    </Card>
                   ))}
                 </div>
-              </Card>
+              </div>
             )
           })
         )}

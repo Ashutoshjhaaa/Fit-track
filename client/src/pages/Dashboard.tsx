@@ -89,14 +89,14 @@ const Dashboard = () => {
         </div>
 
         {/* Chart */}
-        <Card className="lg:col-span-2">
+        <Card className="chart-card">
           <h3 className="text-base font-semibold text-slate-800 dark:text-white">Weekly Overview</h3>
           <p className="text-sm text-slate-400 mt-1">Calorie intake vs burn over the last 7 days</p>
           <CaloriesChart />
         </Card>
 
         {/* Today's Meals */}
-        <Card>
+        <Card className="meals-card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-slate-800 dark:text-white">Today's Meals</h3>
             <button onClick={() => navigate("/food")} className="text-emerald-500 text-sm font-medium flex items-center gap-1 hover:text-emerald-600 transition-colors cursor-pointer">
@@ -121,7 +121,7 @@ const Dashboard = () => {
         </Card>
 
         {/* Today's Activities */}
-        <Card>
+        <Card className="activities-card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-slate-800 dark:text-white">Today's Activities</h3>
             <button onClick={() => navigate("/activity")} className="text-emerald-500 text-sm font-medium flex items-center gap-1 hover:text-emerald-600 transition-colors cursor-pointer">

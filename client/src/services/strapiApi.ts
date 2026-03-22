@@ -1,190 +1,186 @@
-/**
- * Real Strapi API client — replaces mockApi
- * All authenticated requests automatically include the JWT from localStorage
- */
+import { dummyUser, dummyFoodLogs, dummyActivityLogs } from "../assets/assets";
+import type { UserData, FoodEntry, ActivityEntry, FormData } from "../types";
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:1337';
-
-const getToken = () => {
-    const token = localStorage.getItem('token');
-    if (!token || token === 'null' || token === 'undefined') return null;
-    return token;
-};
-
-const authHeaders = () => {
-    const token = getToken();
-    return {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
-};
-
-async function handleResponse(res: Response) {
-    const json = await res.json();
-    if (!res.ok) {
-        console.error(`Strapi Error [${res.status}]:`, json);
-        const message = json?.error?.message || `Request failed with status ${res.status}`;
-        throw new Error(message);
-    }
-    return json;
+interface DB {
+    user: any;
+    foodLogs: FoodEntry[];
+    activityLogs: ActivityEntry[];
 }
+
+const getDB = (): DB => {
+    const dbStr = localStorage.getItem('fitness_db');
+    if (!dbStr) {
+        // Initial setup with dummy data if nothing exists
+        const initialDB: DB = {
+            user: { ...dummyUser },
+            foodLogs: [...dummyFoodLogs],
+            activityLogs: [...dummyActivityLogs],
+        };
+        localStorage.setItem('fitness_db', JSON.stringify(initialDB));
+        return initialDB;
+    }
+    return JSON.parse(dbStr);
+};
+
+const saveDB = (db: DB) => {
+    localStorage.setItem('fitness_db', JSON.stringify(db));
+};
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const strapiApi = {
+    // Keep BASE_URL for compatibility even if not used for real network calls
+    BASE_URL: 'http://localhost:1337',
+    
     auth: {
-        login: async (credentials: { email?: string; identifier?: string; password: string }) => {
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/auth/local`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        identifier: credentials.email || credentials.identifier,
-                        password: credentials.password,
-                    }),
-                })
-            );
-            // Strapi returns { jwt, user } — wrap to match mockApi interface
-            return { data: { jwt: json.jwt, user: json.user } };
-        },
+        login: async (credentials: any) => {
+            await delay(500);
+            let db = getDB();
 
-        register: async (credentials: { username?: string; email: string; password: string }) => {
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/auth/local/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: credentials.username || credentials.email.split('@')[0],
-                        email: credentials.email,
-                        password: credentials.password,
-                    }),
-                })
-            );
-            return { data: { jwt: json.jwt, user: json.user } };
+            // Simple login logic: if it's a first login, we initialize
+            if (!db.user || (credentials.identifier && db.user.email !== credentials.identifier)) {
+                db.user = {
+                    ...dummyUser,
+                    email: credentials.identifier || credentials.email,
+                    username: (credentials.identifier || credentials.email).split('@')[0],
+                };
+                db.foodLogs = [...dummyFoodLogs];
+                db.activityLogs = [...dummyActivityLogs];
+                saveDB(db);
+            }
+            return {
+                data: {
+                    user: db.user,
+                    jwt: "mock_jwt_token_" + Date.now(),
+                },
+            };
         },
+        register: async (credentials: any) => {
+            await delay(500);
+            const db = getDB();
+
+            db.user = {
+                id: "user_" + Date.now(),
+                username: credentials.username || credentials.email.split('@')[0],
+                email: credentials.email,
+                age: 0,
+                weight: 0,
+                height: 0,
+                goal: "maintain",
+                dailyCalorieIntake: 2000,
+                dailyCalorieBurn: 400,
+                createdAt: new Date().toISOString(),
+            };
+            db.foodLogs = [];
+            db.activityLogs = [];
+            saveDB(db);
+
+            return {
+                data: {
+                    user: db.user,
+                    jwt: "mock_jwt_token_" + Date.now(),
+                },
+            };
+        }
     },
-
     user: {
         me: async () => {
-            // Strapi returns user object directly (not wrapped in data)
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/users/me`, {
-                    headers: authHeaders(),
-                })
-            );
-            return { data: json };
+            await delay(300);
+            const db = getDB();
+            // If we have a user in DB (from login/register), return it
+            return { data: db.user || dummyUser };
         },
-
-        update: async (id: string | number, updates: Record<string, any>) => {
-            // Strapi users PUT takes flat fields, no { data: } wrapper
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/users/${id}`, {
-                    method: 'PUT',
-                    headers: authHeaders(),
-                    body: JSON.stringify(updates),
-                })
-            );
-            return { data: json };
-        },
+        update: async (id: string | number, updates: Partial<UserData>) => {
+            await delay(300);
+            const db = getDB();
+            if (db.user) {
+                db.user = { ...db.user, ...updates };
+                saveDB(db);
+            } else {
+                // If no user exists in DB yet, create one from dummyUser + updates
+                db.user = { ...dummyUser, ...updates, id: String(id) };
+                saveDB(db);
+            }
+            return { data: db.user };
+        }
     },
-
     foodLogs: {
         list: async () => {
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/foodlogs`, {
-                    headers: authHeaders(),
-                })
-            );
-            // Strapi v5 list: { data: [...], meta: {} }
-            return { data: (json.data || []).map(normalizeFoodLog) };
+            await delay(300);
+            const db = getDB();
+            return { data: db.foodLogs };
         },
-
-        create: async (payload: { data: { name: string; calories: number; mealType: string; date?: string } }) => {
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/foodlogs`, {
-                    method: 'POST',
-                    headers: authHeaders(),
-                    body: JSON.stringify({
-                        data: {
-                            ...payload.data,
-                            date: payload.data.date || new Date().toISOString().split('T')[0],
-                        },
-                    }),
-                })
-            );
-            return { data: normalizeFoodLog(json.data) };
+        create: async (payload: { data: FormData | any }) => {
+            await delay(300);
+            const db = getDB();
+            const newEntry: FoodEntry = {
+                id: Date.now(),
+                documentId: "doc_food_" + Date.now(),
+                name: payload.data.name,
+                calories: payload.data.calories,
+                mealType: payload.data.mealType,
+                date: new Date().toISOString().split("T")[0],
+                createdAt: new Date().toISOString(),
+            };
+            db.foodLogs.push(newEntry);
+            saveDB(db);
+            return { data: newEntry };
         },
-
         delete: async (documentId: string) => {
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/foodlogs/${documentId}`, {
-                    method: 'DELETE',
-                    headers: authHeaders(),
-                })
-            );
-            return { data: json.data };
-        },
+            await delay(300);
+            const db = getDB();
+            db.foodLogs = db.foodLogs.filter(f => f.documentId !== documentId);
+            saveDB(db);
+            return { data: { id: documentId } };
+        }
     },
-
     activityLogs: {
         list: async () => {
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/activity-logs`, {
-                    headers: authHeaders(),
-                })
-            );
-            return { data: (json.data || []).map(normalizeActivityLog) };
+            await delay(300);
+            const db = getDB();
+            return { data: db.activityLogs };
         },
-
-        create: async (payload: { data: { name: string; duration: number; calories: number; date?: string } }) => {
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/activity-logs`, {
-                    method: 'POST',
-                    headers: authHeaders(),
-                    body: JSON.stringify({
-                        data: {
-                            ...payload.data,
-                            date: payload.data.date || new Date().toISOString().split('T')[0],
-                        },
-                    }),
-                })
-            );
-            return { data: normalizeActivityLog(json.data) };
+        create: async (payload: { data: { name: string; duration: number; calories: number } }) => {
+            await delay(300);
+            const db = getDB();
+            const newEntry: ActivityEntry = {
+                id: Date.now(),
+                documentId: "doc_act_" + Date.now(),
+                name: payload.data.name,
+                duration: payload.data.duration,
+                calories: payload.data.calories,
+                date: new Date().toISOString().split("T")[0],
+                createdAt: new Date().toISOString(),
+            };
+            db.activityLogs.push(newEntry);
+            saveDB(db);
+            return { data: newEntry };
         },
-
         delete: async (documentId: string) => {
-            const json = await handleResponse(
-                await fetch(`${BASE_URL}/api/activity-logs/${documentId}`, {
-                    method: 'DELETE',
-                    headers: authHeaders(),
-                })
-            );
-            return { data: json.data };
-        },
+            await delay(300);
+            const db = getDB();
+            db.activityLogs = db.activityLogs.filter(a => a.documentId !== documentId);
+            saveDB(db);
+            return { data: { id: documentId } };
+        }
     },
+    imageAnalysis: {
+        analyze: async (_formData: any) => {
+            await delay(1500);
+            const foods = [
+                { name: "Apple", calories: 95 },
+                { name: "Banana", calories: 105 },
+                { name: "Avocado Toast", calories: 250 },
+                { name: "Pizza Slice", calories: 300 },
+            ];
+            const randomFood = foods[Math.floor(Math.random() * foods.length)];
+            return {
+                data: {
+                    result: randomFood
+                }
+            };
+        }
+    }
 };
-
-// Strapi v5 returns flat entries: { id, documentId, name, calories, ... }
-function normalizeFoodLog(entry: any) {
-    return {
-        id: entry.id,
-        documentId: entry.documentId,
-        name: entry.name,
-        calories: entry.calories,
-        mealType: entry.mealType,
-        date: entry.date || new Date().toISOString().split('T')[0],
-        createdAt: entry.createdAt,
-    };
-}
-
-function normalizeActivityLog(entry: any) {
-    return {
-        id: entry.id,
-        documentId: entry.documentId,
-        name: entry.name,
-        duration: entry.duration,
-        calories: entry.calories,
-        date: entry.date || new Date().toISOString().split('T')[0],
-        createdAt: entry.createdAt,
-    };
-}
 
 export default strapiApi;

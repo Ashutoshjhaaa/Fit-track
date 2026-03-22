@@ -13,10 +13,11 @@ export default factories.createCoreController('api::foodlog.foodlog', ({ strapi 
 
         const { data } = ctx.request.body as any;
 
-        const entity = await strapi.entityService.create('api::foodlog.foodlog', {
+        const entity = await (strapi.documents as any).create({
+            model: 'api::foodlog.foodlog',
             data: {
                 ...data,
-                users_permissions_user: user.id,
+                user: user.id,
                 publishedAt: new Date(),
             },
         });
@@ -34,7 +35,7 @@ export default factories.createCoreController('api::foodlog.foodlog', ({ strapi 
             ...ctx.query,
             filters: {
                 ...(ctx.query as any).filters,
-                users_permissions_user: { id: user.id },
+                user: { id: user.id },
             },
         };
 

@@ -78,7 +78,7 @@ const Layout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 lg:overflow-y-auto">
+      <main className="flex-1 lg:overflow-y-auto pb-20 lg:pb-0">
         {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between px-5 py-4 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 transition-colors duration-200 sticky top-0 z-50">
           <div className="flex items-center gap-2">
@@ -114,25 +114,33 @@ const Layout = () => {
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-2 pb-[env(safe-area-inset-bottom)] transition-colors duration-200 z-50">
-        <div className="flex justify-around items-center py-2">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-2 pb-[env(safe-area-inset-bottom)] transition-colors duration-200 z-[100] shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+        <div className="flex justify-around items-center py-2 h-16">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.to === "/"}
-              className={({ isActive }) =>
-                `flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${
-                  isActive
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-slate-400 dark:text-slate-500"
-                }`
-              }
             >
-              <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
+              {({ isActive }) => (
+                <div className={`flex flex-col items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-300 ${
+                  isActive
+                    ? "text-emerald-500 dark:text-emerald-400 scale-110"
+                    : "text-slate-400 dark:text-slate-600 scale-100"
+                }`}>
+                  <item.icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'stroke-[2.5px]' : 'stroke-[2px]'}`} />
+                  <span>{item.label}</span>
+                </div>
+              )}
             </NavLink>
           ))}
+          <button
+            onClick={logout}
+            className="flex flex-col items-center justify-center gap-1.5 px-3 py-1.5 text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-wider cursor-pointer"
+          >
+            <LogOutIcon className="w-5 h-5 stroke-[2px]" />
+            <span>Out</span>
+          </button>
         </div>
       </nav>
     </div>

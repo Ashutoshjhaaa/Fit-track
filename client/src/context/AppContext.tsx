@@ -33,6 +33,13 @@ export const AppProvider = ({children}: {children: React.ReactNode}) => {
         localStorage.setItem('token', data.jwt);
     }
 
+    const loginWithProvider = async (provider: string) => {
+        // Mock provider login
+        const mockCredentials = { email: `${provider}@mock.com`, password: 'password' };
+        await login(mockCredentials as any);
+        navigate('/onboarding');
+    }
+
     const fetchUser = async (token: string) => {
         try {
             const {data} = await strapiApi.user.me()
@@ -78,7 +85,7 @@ export const AppProvider = ({children}: {children: React.ReactNode}) => {
 
     
     const value = {
-        user, setUser, isUserFetched, fetchUser, onboardingCompleted, setOnboardingCompleted, allFoodLogs, setAllFoodLogs, allActivityLogs, setAllActivityLogs, signup, login, logout, fetchFoodLogs, fetchActivityLogs,
+        user, setUser, isUserFetched, fetchUser, onboardingCompleted, setOnboardingCompleted, allFoodLogs, setAllFoodLogs, allActivityLogs, setAllActivityLogs, signup, login, loginWithProvider, logout, fetchFoodLogs, fetchActivityLogs,
         
     }
     return <AppContext.Provider value={value}>

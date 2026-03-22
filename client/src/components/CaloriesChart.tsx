@@ -13,10 +13,10 @@ const CaloriesChart = () => {
             const date = new Date(today);
             date.setDate(today.getDate() - i);
             const dateString = date.toISOString().split('T')[0];
-            const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+            const dayName = i === 0 ? 'Today' : date.toLocaleDateString('en-US', { weekday: 'short' });
 
-            const dailyFood = allFoodLogs.filter(log => log.createdAt?.split('T')[0] === dateString);
-            const dailyActivity = allActivityLogs.filter(log => log.createdAt?.split('T')[0] === dateString);
+            const dailyFood = allFoodLogs.filter(log => (log.date === dateString || log.createdAt?.split('T')[0] === dateString));
+            const dailyActivity = allActivityLogs.filter(log => (log.date === dateString || log.createdAt?.split('T')[0] === dateString));
 
             const intake = dailyFood.reduce((sum, item) => sum + item.calories, 0);
             const burn = dailyActivity.reduce((sum, item) => sum + (item.calories || 0), 0);
