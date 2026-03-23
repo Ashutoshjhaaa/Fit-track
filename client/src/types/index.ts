@@ -38,7 +38,7 @@ export interface ProfileFormData {
     age: number;
     weight: number;
     height: number;
-    goal: string;
+    goal: "lose" | "maintain" | "gain";
     dailyCalorieIntake: number;
     dailyCalorieBurn: number;
 }

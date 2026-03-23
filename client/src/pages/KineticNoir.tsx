@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Settings, RefreshCw, Zap, Plus, User, Info, Ruler, Target } from 'lucide-react';
+import { RefreshCw, Zap, User, Info, Ruler, Target } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { goalLabels } from '../assets/assets';
 
