@@ -46,7 +46,7 @@ const Onboarding = () => {
           age: formData.age,
           weight: formData.weight,
           height: formData.height,
-          goal: formData.goal,
+          goal: formData.goal as "lose" | "maintain" | "gain",
           dailyCalorieBurn: formData.dailyCalorieBurn,
           dailyCalorieIntake: formData.dailyCalorieIntake,
         })
