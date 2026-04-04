@@ -1,4 +1,14 @@
-# 🚀 Getting started with Strapi
+# 🚀 Strapi Backend - FITNESS TRACKER API
+
+This is the backend for the Fitness Tracker application, built with [Strapi](https://strapi.io/).
+
+## 🛠 Features
+
+- **Activity Log API**: Manage and store user workouts.
+- **Food Log API**: Track daily food consumption and nutrition.
+- **User Customization**: Extended user profiles for age, weight, height, and goals.
+
+## 🚀 Getting Started
 
 Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
 

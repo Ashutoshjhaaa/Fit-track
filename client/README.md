@@ -1,4 +1,37 @@
-# React + TypeScript + Vite
+# 🏋️‍♂️ Fitness Tracker Frontend - React + TypeScript + Vite
+
+A modern, fast dashboard for the Fitness Tracker app.
+
+## 🚀 Key Features
+
+- **Personalized Dashboard**: View real-time calorie intake and burned data.
+- **AI Integration**: AI-driven diet planning using Gemini.
+- **Onboarding Experience**: Smooth profile setup.
+
+## 🛠 Tech Stack
+
+- **React & TypeScript**
+- **Vite** for fast HMR
+- **Tailwind CSS** for layout
+- **Framer Motion** for animations
+- **Radix UI** components for accessibility
+
+## 🚀 Getting Started
+
+1.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+2.  **Start the dev server**:
+    ```bash
+    npm run dev
+    ```
+3.  **Build for production**:
+    ```bash
+    npm run build
+    ```
+
+## 🛠 Features
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
