@@ -31,7 +31,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const strapiApi = {
     // Keep BASE_URL for compatibility even if not used for real network calls
     BASE_URL: 'http://localhost:1337',
-    
+
     auth: {
         login: async (credentials: any) => {
             await delay(500);

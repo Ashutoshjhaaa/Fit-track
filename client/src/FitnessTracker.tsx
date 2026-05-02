@@ -437,7 +437,7 @@ const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
       {/* Navbar */}
       <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? 'glass-nav h-16 shadow-sm shadow-green-500/5' : 'h-20'}`}>
         <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
-          <div 
+          <div
             className="flex items-center gap-2 cursor-pointer group"
             onClick={() => {
               setView('landing');
@@ -820,20 +820,20 @@ const AuthLayout = ({ children, title, subtitle, setView }: any) => {
   return (
     <div className="min-h-screen bg-white flex flex-col md:flex-row p-4 md:p-6 gap-6 relative overflow-hidden dot-grid">
       <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-green-500/5 rounded-full blur-[100px] pointer-events-none" />
-      
+
       {/* Back Button */}
-      <button 
+      <button
         onClick={() => setView('landing')}
         className="absolute top-8 left-8 gap-2 flex items-center justify-center h-10 px-4 rounded-xl font-semibold transition-all hover:bg-gray-100 text-gray-600 z-50 cursor-pointer group"
       >
-        <Icons.ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> 
+        <Icons.ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         <span>Back</span>
       </button>
 
       <div className="flex-1 flex items-center justify-center relative z-10 w-full">
         <div className="w-full max-w-md anim-fade-up">
           <div className="text-center mb-8">
-            <button 
+            <button
               onClick={() => setView('landing')}
               className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-green-600 to-green-400 flex items-center justify-center shadow-lg shadow-green-500/20 mx-auto mb-6 hover:scale-110 transition-transform cursor-pointer"
             >
@@ -938,11 +938,11 @@ const SignUpPage = ({ setView }: any) => {
   return (
     <AuthLayout
       title="Create Account"
-      subtitle="Join 50,000+ athletes reaching their peak."
+      subtitle=""
       setView={setView}
     >
-      <Button 
-        variant="outline" 
+      <Button
+        variant="outline"
         className="w-full h-12 gap-3 mb-6 font-bold text-gray-700"
         onClick={() => loginWithProvider('google')}
       >
@@ -958,9 +958,7 @@ const SignUpPage = ({ setView }: any) => {
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <div className="space-y-1">
           <Label htmlFor="name">Full Name</Label>
-          <Input id="name" type="text" placeholder="Ashutosh Jha          cd client
-          npm install
-          npm run build" value={name} onChange={(e: any) => setName(e.target.value)} required />
+          <Input id="name" type="text" placeholder="Enter your full name" value={name} onChange={(e: any) => setName(e.target.value)} required />
         </div>
         <div className="space-y-1">
           <Label htmlFor="email">Email</Label>

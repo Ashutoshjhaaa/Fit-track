@@ -1,12 +1,12 @@
-import { createContext,useContext,useEffect,useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-import {initialState, type FoodEntry,type ActivityEntry, type User, type Credentials } from "../types";
+import { initialState, type FoodEntry, type ActivityEntry, type User, type Credentials } from "../types";
 import { useNavigate } from "react-router-dom";
 import strapiApi from "../services/strapiApi";
 
 const AppContext = createContext(initialState);
 
-export const AppProvider = ({children}: {children: React.ReactNode}) => {
+export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
     const navigate = useNavigate()
     const [user, setUser] = useState<User>(null);
@@ -16,18 +16,18 @@ export const AppProvider = ({children}: {children: React.ReactNode}) => {
     const [allActivityLogs, setAllActivityLogs] = useState<ActivityEntry[]>([]);
 
     const signup = async (credentials: Credentials) => {
-        const {data} = await strapiApi.auth.register(credentials);
-        setUser({...data.user, token: data.jwt});
-        if(data?.user?.age && data?.user?.weight && data?.user?.goal) {
+        const { data } = await strapiApi.auth.register(credentials);
+        setUser({ ...data.user, token: data.jwt });
+        if (data?.user?.age && data?.user?.weight && data?.user?.goal) {
             setOnboardingCompleted(true);
         }
         localStorage.setItem('token', data.jwt);
         setIsUserFetched(true);
     }
     const login = async (credentials: Credentials) => {
-        const {data} = await strapiApi.auth.login(credentials);
-        setUser({...data.user, token: data.jwt});
-        if(data?.user?.age && data?.user?.weight && data?.user?.goal) {
+        const { data } = await strapiApi.auth.login(credentials);
+        setUser({ ...data.user, token: data.jwt });
+        if (data?.user?.age && data?.user?.weight && data?.user?.goal) {
             setOnboardingCompleted(true);
         }
         localStorage.setItem('token', data.jwt);
@@ -42,9 +42,9 @@ export const AppProvider = ({children}: {children: React.ReactNode}) => {
 
     const fetchUser = async (token: string) => {
         try {
-            const {data} = await strapiApi.user.me()
-            setUser({...data, token})
-            if(data?.age && data?.weight && data?.goal) {
+            const { data } = await strapiApi.user.me()
+            setUser({ ...data, token })
+            if (data?.age && data?.weight && data?.goal) {
                 setOnboardingCompleted(true);
             }
         } catch {
@@ -56,12 +56,12 @@ export const AppProvider = ({children}: {children: React.ReactNode}) => {
     }
 
     const fetchFoodLogs = async () => {
-        const {data} = await strapiApi.foodLogs.list()
+        const { data } = await strapiApi.foodLogs.list()
         setAllFoodLogs(data);
     }
 
     const fetchActivityLogs = async () => {
-        const {data} = await strapiApi.activityLogs.list()
+        const { data } = await strapiApi.activityLogs.list()
         setAllActivityLogs(data);
     }
 
@@ -79,18 +79,18 @@ export const AppProvider = ({children}: {children: React.ReactNode}) => {
         } else {
             setIsUserFetched(true);
         }
-    },[]);
-     
+    }, []);
 
 
-    
+
+
     const value = {
         user, setUser, isUserFetched, fetchUser, onboardingCompleted, setOnboardingCompleted, allFoodLogs, setAllFoodLogs, allActivityLogs, setAllActivityLogs, signup, login, loginWithProvider, logout, fetchFoodLogs, fetchActivityLogs,
-        
+
     }
     return <AppContext.Provider value={value}>
         {children}
-    
+
     </AppContext.Provider>;
 }
 
