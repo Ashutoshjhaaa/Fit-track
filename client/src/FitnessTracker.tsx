@@ -226,8 +226,8 @@ const Icons = {
 /* ─────────────────────────────────────────────────────────────────────────────
    SHADCN-STYLE PRIMITIVES
    ───────────────────────────────────────────────────────────────────────────── */
-const Button = ({ variant = 'default', size = 'default', className = '', children, ...props }: any) => {
-  const baseStyles = "inline-flex items-center justify-center rounded-xl font-semibold transition-all focus:outline-none disabled:opacity-50 disabled:pointer-events-none";
+const Button = ({ variant = 'default', size = 'default', className = '', tooltip = '', children, ...props }: any) => {
+  const baseStyles = "inline-flex items-center justify-center rounded-xl font-semibold transition-all focus:outline-none disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
   const variants: any = {
     default: "bg-green-600 text-white hover:bg-green-700 btn-shine shadow-md",
     outline: "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700",
@@ -242,9 +242,17 @@ const Button = ({ variant = 'default', size = 'default', className = '', childre
   };
 
   return (
-    <button className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
-      {children}
-    </button>
+    <div className={`relative group/btn ${className.includes('w-full') ? 'w-full' : 'inline-block'}`}>
+      <button className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
+        {children}
+      </button>
+      {tooltip && (
+        <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover/btn:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap z-50 shadow-xl transform translate-y-1 group-hover/btn:translate-y-0">
+          {tooltip}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-t-gray-900" />
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -413,6 +421,15 @@ const WorkoutCard = () => {
    LANDING PAGE
    ───────────────────────────────────────────────────────────────────────────── */
 
+const PricingImage = ({ src, alt, hoverText }: { src: string, alt: string, hoverText: string }) => (
+  <div className="relative w-full h-48 rounded-2xl overflow-hidden mb-6 group cursor-help">
+    <img src={src} alt={alt} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+    <div className="absolute inset-0 bg-green-900/90 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-8 backdrop-blur-[2px]">
+      <p className="text-white font-syne font-bold text-sm leading-relaxed transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{hoverText}</p>
+    </div>
+  </div>
+);
+
 const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
   const { user } = useAppContext();
   const navigate = useNavigate();
@@ -559,12 +576,12 @@ const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: <Icons.Dumbbell />, title: 'Smart Workout Tracking', desc: 'Log sets, reps, and weight with intelligent form detection. Adapts to your individual pace.', tint: 'bg-green-50', border: 'border-green-100', accent: 'text-green-600', iconBg: 'bg-green-600' },
-              { icon: <Icons.Flame />, title: 'Nutrition Intelligence', desc: 'Track macros and calories with AI-powered scanning. Personal meal plans based on your goals.', tint: 'bg-orange-50', border: 'border-orange-100', accent: 'text-orange-600', iconBg: 'bg-orange-600' },
-              { icon: <Icons.TrendingUp />, title: 'Progress Analytics', desc: 'Deep dive into your stats with beautiful charts and predicted milestones based on your data.', tint: 'bg-emerald-50', border: 'border-emerald-100', accent: 'text-emerald-600', iconBg: 'bg-emerald-600' },
-              { icon: <Icons.Target />, title: 'Goal Setting', desc: 'Set long-term goals and break them down into achievable daily habits with smart reminders.', tint: 'bg-blue-50', border: 'border-blue-100', accent: 'text-blue-600', iconBg: 'bg-blue-600' },
-              { icon: <Icons.Zap />, title: 'Live Workout Mode', desc: 'Get real-time feedback during your sessions with heart rate monitoring and rest timers.', tint: 'bg-yellow-50', border: 'border-yellow-100', accent: 'text-yellow-600', iconBg: 'bg-yellow-600' },
-              { icon: <Icons.Shield />, title: 'Privacy First', desc: 'Your fitness data is yours. End-to-end encryption and total control over what you share.', tint: 'bg-rose-50', border: 'border-rose-100', accent: 'text-rose-600', iconBg: 'bg-rose-600' }
+              { icon: <Icons.Dumbbell />, title: 'Precision Activity Logging', desc: 'Track every set, rep, and cardio session with ease. Our intuitive interface makes logging workouts faster than ever.', tint: 'bg-green-50', border: 'border-green-100', accent: 'text-green-600', iconBg: 'bg-green-600' },
+              { icon: <Icons.Flame />, title: 'Clinical Nutrition Tracking', desc: 'Detailed macro and calorie breakdown for every meal. Stay on top of your diet with our comprehensive food database.', tint: 'bg-orange-50', border: 'border-orange-100', accent: 'text-orange-600', iconBg: 'bg-orange-600' },
+              { icon: <Icons.TrendingUp />, title: 'Advanced Biometrics', desc: 'Deep dive into your health stats with beautiful charts. Visualize your progress and see how far you have come.', tint: 'bg-emerald-50', border: 'border-emerald-100', accent: 'text-emerald-600', iconBg: 'bg-emerald-600' },
+              { icon: <Icons.Target />, title: 'Smart Onboarding', desc: 'Personalized fitness goal setting based on your unique body profile and desired health outcomes.', tint: 'bg-blue-50', border: 'border-blue-100', accent: 'text-blue-600', iconBg: 'bg-blue-600' },
+              { icon: <Icons.Zap />, title: 'Real-time Insights', desc: 'Get instant feedback on your daily activity. Stay motivated with smart notifications and progress reminders.', tint: 'bg-yellow-50', border: 'border-yellow-100', accent: 'text-yellow-600', iconBg: 'bg-yellow-600' },
+              { icon: <Icons.Shield />, title: 'Secure Google Auth', desc: 'Seamless and secure login experience with Google integration. Your data is always protected and private.', tint: 'bg-rose-50', border: 'border-rose-100', accent: 'text-rose-600', iconBg: 'bg-rose-600' }
             ].map((f, i) => (
               <Card key={i} className={`p-8 card-hover flex flex-col items-start gap-6 border ${f.border} ${f.tint}`}>
                 <div className={`h-12 w-12 rounded-2xl ${f.iconBg} text-white flex items-center justify-center shadow-lg`}>
@@ -576,6 +593,61 @@ const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
                 </div>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-24 md:py-32 bg-green-50/30 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-green-200/20 rounded-full blur-[100px] translate-x-1/2 -translate-y-1/2" />
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="anim-fade-up">
+              <Badge variant="default" className="mb-4">Our Mission</Badge>
+              <h2 className="font-syne font-extrabold text-4xl md:text-5xl lg:text-6xl tracking-tight text-gray-900 mb-8">
+                Empowering every body <br />through <span className="gradient-text">intelligent data.</span>
+              </h2>
+              <p className="text-lg text-gray-600 font-light leading-relaxed mb-8">
+                FitPulse was born out of a simple idea: that professional-grade fitness tools should be accessible to everyone. We've combined clinical nutrition science with advanced data analytics to create a platform that doesn't just track your activity—it understands your potential.
+              </p>
+              <div className="space-y-6">
+                {[
+                  { title: 'Holistic Philosophy', desc: 'We track your movement, nutrition, and biometrics to provide a complete picture of your health.' },
+                  { title: 'Community Driven', desc: 'Join a global community of athletes who share goals, challenges, and success stories.' },
+                  { title: 'Privacy First', desc: 'Your health data is sensitive. We use industry-leading encryption to ensure only you have access.' }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4">
+                    <div className="h-6 w-6 rounded-full bg-green-600 flex items-center justify-center text-white shrink-0 mt-1">
+                      <Icons.Check className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900 text-base mb-1">{item.title}</h4>
+                      <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative">
+              <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-700">
+                <img 
+                  src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=1000" 
+                  alt="Fitness Lifestyle" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl anim-fade-up anim-d3">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                    <Icons.TrendingUp className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-black text-gray-900">98%</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Success Rate</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -615,6 +687,11 @@ const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
           <div className="grid lg:grid-cols-3 gap-8 items-stretch">
             {/* Free */}
             <Card className="p-8 flex flex-col bg-white border-white shadow-xl shadow-green-500/5 card-hover">
+              <PricingImage 
+                src="https://images.unsplash.com/photo-1594882645126-14020914d58d?auto=format&fit=crop&q=80&w=800" 
+                alt="Free plan" 
+                hoverText="Start your journey with essential tracking and community support at no cost." 
+              />
               <div className="mb-8">
                 <h3 className="font-syne font-extrabold text-2xl text-gray-900 mb-2">Free</h3>
                 <p className="text-sm text-gray-400 font-medium">Perfect for entry-level tracking</p>
@@ -633,11 +710,16 @@ const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
                   </li>
                 ))}
               </ul>
-              <Button variant="outline" className="w-full" onClick={() => setView('signup')}>Start Free</Button>
+              <Button variant="outline" className="w-full" tooltip="Instant access to basic features" onClick={() => setView('signup')}>Start Free</Button>
             </Card>
 
             {/* Pro */}
             <Card className="p-8 flex flex-col bg-gradient-to-br from-green-900 to-green-700 border-none shadow-2xl shadow-green-900/40 relative scale-[1.03] z-10 overflow-hidden group">
+              <PricingImage 
+                src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800" 
+                alt="Pro plan" 
+                hoverText="Unlock elite-level analytics, AI-powered training, and advanced nutrition insights." 
+              />
               <div className="absolute top-0 right-0 p-4">
                 <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-md">Most Popular</Badge>
               </div>
@@ -662,12 +744,23 @@ const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full bg-white text-green-900 hover:bg-green-50 button-shine" onClick={() => setView('signup')}>Get Pro Now</Button>
+                <Button 
+                  className="w-full !bg-white !text-green-900 hover:!bg-green-50 button-shine font-bold" 
+                  tooltip="The complete professional fitness experience" 
+                  onClick={() => setView('signup')}
+                >
+                  Get Pro Now
+                </Button>
               </div>
             </Card>
 
             {/* Team */}
             <Card className="p-8 flex flex-col bg-white border-white shadow-xl shadow-green-500/5 card-hover">
+              <PricingImage 
+                src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=800" 
+                alt="Team plan" 
+                hoverText="Scale your team with centralized management, shared goals, and white-label branding." 
+              />
               <div className="mb-8">
                 <h3 className="font-syne font-extrabold text-2xl text-gray-900 mb-2">Team</h3>
                 <p className="text-sm text-gray-400 font-medium">For gyms and training groups</p>
@@ -686,8 +779,62 @@ const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
                   </li>
                 ))}
               </ul>
-              <Button variant="outline" className="w-full" onClick={() => setView('signup')}>Contact Sales</Button>
+              <Button variant="outline" className="w-full" tooltip="Custom solutions for large organizations" onClick={() => setView('signup')}>Contact Sales</Button>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Blog Section */}
+      <section id="blog" className="py-24 md:py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
+            <div className="max-w-2xl">
+              <Badge variant="default" className="mb-4">Insights</Badge>
+              <h2 className="font-syne font-extrabold text-4xl md:text-5xl lg:text-6xl tracking-tight text-gray-900">
+                Knowledge for your <br /><span className="gradient-text">peak performance.</span>
+              </h2>
+            </div>
+            <Button variant="outline" className="hidden md:flex">View all articles</Button>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { 
+                title: 'Mastering Your Morning Routine for Maximum Gains', 
+                category: 'Performance', 
+                time: '5 min read',
+                image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=800'
+              },
+              { 
+                title: 'The Science of Hypertrophy: Building Real Strength', 
+                category: 'Training', 
+                time: '8 min read',
+                image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800'
+              },
+              { 
+                title: 'Nutrition Myths Debunked: What Actually Works', 
+                category: 'Nutrition', 
+                time: '6 min read',
+                image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800'
+              }
+            ].map((post, i) => (
+              <Card key={i} className="overflow-hidden border-none shadow-xl shadow-gray-200/50 group cursor-pointer card-hover">
+                <div className="relative h-64 overflow-hidden">
+                  <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute top-4 left-4">
+                    <Badge className="bg-white/90 backdrop-blur-md text-green-600 border-none shadow-sm">{post.category}</Badge>
+                  </div>
+                </div>
+                <div className="p-8 bg-white">
+                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">{post.time}</p>
+                  <h3 className="font-syne font-extrabold text-xl text-gray-900 mb-6 group-hover:text-green-600 transition-colors leading-tight">{post.title}</h3>
+                  <div className="flex items-center gap-2 text-sm font-bold text-green-600 group">
+                    Read Article <Icons.ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -730,10 +877,14 @@ const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
               Ready to transform <br />your fitness journey?
             </h2>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="h-16 px-10 text-lg bg-white text-green-600 hover:bg-green-50 shadow-xl group w-full sm:w-auto" onClick={() => setView('signup')}>
+              <Button 
+                size="lg" 
+                className="h-16 px-10 text-lg !bg-white !text-green-600 hover:!bg-green-50 shadow-xl group w-full sm:w-auto font-bold" 
+                onClick={() => setView('signup')}
+              >
                 Get started — it's free <Icons.ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button variant="ghost" className="h-16 px-10 text-lg text-white hover:bg-white/10 w-full sm:w-auto" onClick={() => setView('signin')}>Sign in</Button>
+              <Button variant="ghost" className="h-16 px-10 text-lg !text-white hover:bg-white/10 w-full sm:w-auto font-bold" onClick={() => setView('signin')}>Sign in</Button>
             </div>
             <p className="text-green-100 mt-8 text-sm font-bold opacity-80">Join 50,000+ athletes today.</p>
           </div>
@@ -745,7 +896,13 @@ const LandingPage = ({ setView }: { setView: (view: string) => void }) => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
             <div className="col-span-2 lg:col-span-2 space-y-6">
-              <div className="flex items-center gap-2 cursor-pointer group">
+              <div 
+                className="flex items-center gap-2 cursor-pointer group"
+                onClick={() => {
+                  setView('landing');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-green-600 to-green-400 flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-lg shadow-green-500/20">
                   <Icons.Activity className="w-6 h-6 text-white" />
                 </div>
