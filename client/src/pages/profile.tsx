@@ -53,21 +53,27 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0d0f0e] transition-colors duration-200">
+    <div className="min-h-screen bg-[#15161D] text-white transition-colors duration-200">
       {isEditing ? (
-        <div className="p-6 max-w-2xl mx-auto pt-20">
-          <Card className="bg-white dark:bg-[#141716] border-slate-200 dark:border-white/5 transition-colors shadow-sm dark:shadow-none">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6 font-heading uppercase tracking-tight">Edit Kinetic Profile</h3>
+        <div className="p-6 max-w-2xl mx-auto pt-16">
+          <Card className="bg-[#21222A] border border-white/10 shadow-2xl p-8 rounded-2xl">
+            <h3 className="text-2xl font-black text-white mb-6 font-roobert uppercase italic tracking-tight">
+              Edit Athlete Profile
+            </h3>
             <div className="space-y-4">
-              <Input label="Age" type="number" value={editData.age} onChange={(v) => setEditData({ ...editData, age: Number(v) })} placeholder="e.g. 25" min={1} required className="dark:bg-black/20 dark:border-white/10 text-slate-900 dark:text-white" />
-              <Input label="Weight (kg)" type="number" value={editData.weight} onChange={(v) => setEditData({ ...editData, weight: Number(v) })} placeholder="e.g. 70" min={1} required className="dark:bg-black/20 dark:border-white/10 text-slate-900 dark:text-white" />
-              <Input label="Height (cm)" type="number" value={editData.height} onChange={(v) => setEditData({ ...editData, height: Number(v) })} placeholder="e.g. 175" min={1} required className="dark:bg-black/20 dark:border-white/10 text-slate-900 dark:text-white" />
-              <Select label="Goal" value={editData.goal} onChange={(v) => setEditData({ ...editData, goal: String(v) as typeof editData.goal })} options={goalOptions} required placeholder="Select your goal" className="dark:bg-black/20 dark:border-white/10 text-slate-900 dark:text-white" />
-              <Input label="Daily Calorie Intake (kcal)" type="number" value={editData.dailyCalorieIntake} onChange={(v) => setEditData({ ...editData, dailyCalorieIntake: Number(v) })} placeholder="e.g. 2200" min={1} required className="dark:bg-black/20 dark:border-white/10 text-slate-900 dark:text-white" />
-              <Input label="Daily Calorie Burn (kcal)" type="number" value={editData.dailyCalorieBurn} onChange={(v) => setEditData({ ...editData, dailyCalorieBurn: Number(v) })} placeholder="e.g. 400" min={1} required className="dark:bg-black/20 dark:border-white/10 text-slate-900 dark:text-white" />
+              <Input label="Age" type="number" value={editData.age} onChange={(v) => setEditData({ ...editData, age: Number(v) })} placeholder="e.g. 25" min={1} required />
+              <Input label="Weight (kg)" type="number" value={editData.weight} onChange={(v) => setEditData({ ...editData, weight: Number(v) })} placeholder="e.g. 70" min={1} required />
+              <Input label="Height (cm)" type="number" value={editData.height} onChange={(v) => setEditData({ ...editData, height: Number(v) })} placeholder="e.g. 175" min={1} required />
+              <Select label="Goal" value={editData.goal} onChange={(v) => setEditData({ ...editData, goal: String(v) as typeof editData.goal })} options={goalOptions} required placeholder="Select your goal" />
+              <Input label="Daily Calorie Intake (kcal)" type="number" value={editData.dailyCalorieIntake} onChange={(v) => setEditData({ ...editData, dailyCalorieIntake: Number(v) })} placeholder="e.g. 2200" min={1} required />
+              <Input label="Daily Calorie Burn (kcal)" type="number" value={editData.dailyCalorieBurn} onChange={(v) => setEditData({ ...editData, dailyCalorieBurn: Number(v) })} placeholder="e.g. 400" min={1} required />
               <div className="flex gap-3 pt-4">
-                <Button className="bg-emerald-500 dark:bg-[#00ff6a] text-white dark:text-black hover:opacity-90 transition-all font-bold uppercase text-[10px] tracking-widest px-6" onClick={handleSave} disabled={isSaving}>{isSaving ? "Saving..." : "Save Changes"}</Button>
-                <Button variant="secondary" className="border-slate-200 dark:border-white/10 text-slate-600 dark:text-white hover:bg-slate-50 dark:hover:bg-white/5 transition-all font-bold uppercase text-[10px] tracking-widest" onClick={() => setIsEditing(false)}>Cancel</Button>
+                <Button className="bg-[#F2305A] hover:bg-[#ff3b68] text-white font-black uppercase italic text-xs tracking-wider px-8 shadow-lg shadow-[#F2305A]/30" onClick={handleSave} disabled={isSaving}>
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </Button>
+                <Button variant="secondary" onClick={() => setIsEditing(false)}>
+                  Cancel
+                </Button>
               </div>
             </div>
           </Card>

@@ -29,18 +29,18 @@ export default function Select({ label, value, onChange, options = [], className
                 <select
                     value={value}
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
-                    className='w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 cursor-pointer'
+                    className='w-full px-4 py-3 rounded-xl border border-white/10 bg-[#15161D] text-white appearance-none focus:outline-none focus:ring-2 focus:ring-[#F2305A] focus:border-transparent transition-all duration-200 cursor-pointer text-sm'
                 >
-                    <option value='' disabled>
+                    <option value='' disabled className="bg-[#1C1D26] text-white">
                         {placeholder}
                     </option>
                     {options.map((option) => (
-                        <option key={option.value} value={option.value}>
+                        <option key={option.value} value={option.value} className="bg-[#1C1D26] text-white">
                             {option.label}
                         </option>
                     ))}
                 </select>
-                <ChevronDownIcon className='absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none' />
+                <ChevronDownIcon className='absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8E8EA0] pointer-events-none' />
             </div>
         </div>
     );

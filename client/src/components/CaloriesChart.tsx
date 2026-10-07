@@ -34,16 +34,25 @@ const CaloriesChart = () => {
     const data = getData();
 
     return (
-        <div className="w-full h-[300px] mt-4" style={{ minWidth: 0 }}>
+        <div className="w-full h-[300px] mt-4 select-none" style={{ minWidth: 0 }}>
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" className="dark:stroke-slate-700" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} className="dark:text-slate-400" />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} className="dark:text-slate-400" />
-                    <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                    <Legend iconType="circle" wrapperStyle={{ paddingTop: '10px' }} />
-                    <Bar dataKey="Intake" fill="#10b981" radius={[4, 4, 0, 0]} barSize={12} name="Intake" />
-                    <Bar dataKey="Burn" fill="#f97316" radius={[4, 4, 0, 0]} barSize={12} name="Burn" />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.06)" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#8E8EA0', fontSize: 12 }} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#8E8EA0', fontSize: 12 }} />
+                    <Tooltip 
+                        cursor={{ fill: 'rgba(255,255,255,0.03)' }} 
+                        contentStyle={{ 
+                            backgroundColor: '#1C1D26', 
+                            borderRadius: '12px', 
+                            border: '1px solid rgba(255,255,255,0.1)', 
+                            boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                            color: '#FFFFFF'
+                        }} 
+                    />
+                    <Legend iconType="circle" wrapperStyle={{ paddingTop: '10px', color: '#8E8EA0' }} />
+                    <Bar dataKey="Intake" fill="#F2305A" radius={[4, 4, 0, 0]} barSize={12} name="Intake" />
+                    <Bar dataKey="Burn" fill="#FF8552" radius={[4, 4, 0, 0]} barSize={12} name="Burn" />
                 </BarChart>
             </ResponsiveContainer>
         </div>
