@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300..700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+@import "tailwindcss";
 
 @theme {
   --color-kinetic-bg: #0d0f0e;
@@ -13,6 +14,8 @@
   --color-kinetic-card-light: #ffffff;
   --color-kinetic-muted-light: #4b5563;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   .font-heading {
@@ -49,9 +52,6 @@
   100% { left: 100%; }
 }
 
-@import "tailwindcss";
-
-@custom-variant dark (&:where(.dark, .dark *));
 
 * {
   font-family: "Inter", sans-serif;
